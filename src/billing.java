@@ -1,9 +1,13 @@
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -20,6 +24,9 @@ Connection con;
 Statement stmt;
 String query;
 ResultSet rs;
+XWPFDocument doc=new XWPFDocument();
+    XWPFParagraph paragraph =doc.createParagraph();//creates a paragraph
+     XWPFRun run=paragraph.createRun();
 void insertinto(long phone,Object id,Object name,Object units,Object price){
     long recipt=phone;
     System.out.println(recipt);
@@ -28,12 +35,17 @@ void insertinto(long phone,Object id,Object name,Object units,Object price){
     int funits=(int)units;
     int fprice=(int)price;
     //this is done just to make sure they dont through any error while entering into database;
-System.out.println(fid+"\t"+fname+"\t"+funits+"\t"+fprice);
+System.out.println(fid+"\t"+fname+"\t"+funits+"\t"+funits/fprice+"\t"+fprice);
  stmt = null;
  rs = null;
  con = null;
 try
         {
+         FileOutputStream f2=new FileOutputStream("file.docx");
+         run.setText(fid+"\t"+fname+"\t"+funits+"\t"+fprice/funits+"\t"+fprice);
+         run.addBreak();
+         doc.write(f2);
+         f2.close();
      Class.forName("com.mysql.jdbc.Driver");
             System.out.println("check1");
             String database = "jdbc:mysql://localhost:3306/bookstore";

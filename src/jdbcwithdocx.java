@@ -27,14 +27,7 @@ String temp=null;
         XWPFDocument doc=new XWPFDocument();
     XWPFParagraph paragraph =doc.createParagraph();//creates a paragraph
         XWPFRun run=paragraph.createRun();//create running text
-        //run.setText("pancakes");//no \t and \n works
-       // run.setText("nutella");//continues in the same line
-        //run.addBreak();//adds new line or a new para kind
-        //run.setText("i'am Hung0");
-    
-    try{     FileOutputStream f2=new FileOutputStream("file.docx");
-       
-        
+    try{FileOutputStream f2=new FileOutputStream("file.docx");
         Class.forName("java.sql.Driver");
 con=DriverManager.getConnection("jdbc:mysql://localhost/bookstore","root","root");
 stmt = con.createStatement();
@@ -61,6 +54,5 @@ f2.close();
    e.printStackTrace();
    }
 
-   
 }
 }

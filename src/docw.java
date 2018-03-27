@@ -14,12 +14,14 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 public class docw {
     public static void main(String args[]) throws IOException{
+        
         XWPFDocument doc=new XWPFDocument();
         XWPFParagraph paragraph2 =doc.createParagraph();//creates 1st paragraph
         XWPFRun run2=paragraph2.createRun();
         XWPFParagraph paragraph =doc.createParagraph();//creates a paragraph
         XWPFRun run=paragraph.createRun();//create running text
-        run.setText("pancakes");//no \t and \n works
+        run.setText(String.format("One: %1$-30s Two: %2$1s Three: %3$s",
+                "10", "20", "30"));//no \t and \n works
         run.setText("nutella");//continues in the same line
         run.addBreak();//adds new line or a new para kind
         run.setText("i'am Hung0");
