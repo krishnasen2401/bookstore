@@ -19,7 +19,6 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
  * @author Lakshmi
  */
 public class billing extends javax.swing.JFrame {
-int total=0;
 Connection con;
 Statement stmt;
 String query;
@@ -283,7 +282,7 @@ try
                                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
                                     .addComponent(jTextField2)
                                     .addComponent(jTextField3))))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -393,8 +392,6 @@ try
                     JOptionPane.showMessageDialog(this, ("No Units Left check It can be Wrong entry"),("ERROR"), 2);
                 }else{
                     model.addRow(new Object[]{id,name,units,finalprice});
-                    total=total+finalprice;
-                    jTextField6.setText(String.valueOf(total));
                 }
 
             }}
@@ -429,8 +426,6 @@ try
                     JOptionPane.showMessageDialog(this, ("No Units Left check It can be Wrong entry"),("ERROR"), 2);
                 }else{
                     model.addRow(new Object[]{id,name,units,finalprice});
-                    total=total+finalprice;
-                    jTextField6.setText(String.valueOf(total));
                 }
 
             }}
@@ -441,23 +436,28 @@ try
     }//GEN-LAST:event_jButton1KeyPressed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int grandtotal=0;
         String name=jTextField8.getText();
         long id=Long.parseLong(jTextField7.getText());
         System.out.println("printing bill");
         System.out.println("taking data from table and inserting into array");
-        int i,j;
+        int i,j=0;
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         int nRow = model.getRowCount(), nCol = model.getColumnCount();
         Object[][] tableData = new Object[nRow][nCol];
         for (i = 0 ; i < nRow ; i++){
+            if((int)tableData[i][j+2]==0){
+                continue;}
             for (j = 0 ; j < nCol ; j++){
                 tableData[i][j] = model.getValueAt(i,j);
-
             }
             j=0;
-            insertinto(id,tableData[i][j],tableData[i][j+1],tableData[i][j+2],tableData[i][j+3]);//go to top and check
+            insertinto(id,tableData[i][j],tableData[i][j+1],tableData[i][j+2],tableData[i][j+3]);
+            grandtotal=grandtotal+(int)tableData[i][j+3];
+            //go to top and check
         }
-        intovoice(id,name,total);
+        jTextField6.setText(""+grandtotal);
+        intovoice(id,name,grandtotal);
 
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
