@@ -497,7 +497,6 @@ try
         doc.write(f2);
          f2.close();
        }catch(IOException e){}
-        System.out.println("taking data from table and inserting into array");
       jTextField6.setText(""+grandtotal);
         intovoice(id,name,grandtotal);
 
