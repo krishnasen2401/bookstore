@@ -1,8 +1,14 @@
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -23,9 +29,8 @@ Connection con;
 Statement stmt;
 String query;
 ResultSet rs;
-XWPFDocument doc=new XWPFDocument();
-    XWPFParagraph paragraph =doc.createParagraph();//creates a paragraph
-     XWPFRun run=paragraph.createRun();
+String date;
+
 void insertinto(long phone,Object id,Object name,Object units,Object price){
     long recipt=phone;
     System.out.println(recipt);
@@ -40,11 +45,7 @@ System.out.println(fid+"\t"+fname+"\t"+funits+"\t"+funits/fprice+"\t"+fprice);
  con = null;
 try
         {
-         FileOutputStream f2=new FileOutputStream("file.docx");
-         run.setText(fid+"\t"+fname+"\t"+funits+"\t"+fprice/funits+"\t"+fprice);
-         run.addBreak();
-         doc.write(f2);
-         f2.close();
+         
      Class.forName("com.mysql.jdbc.Driver");
             System.out.println("check1");
             String database = "jdbc:mysql://localhost:3306/bookstore";
@@ -55,7 +56,7 @@ try
                     + recipt +","
                     + fid + ","
                     + funits + ","
-                    + fprice + ",'2018-02-28');";
+                    + fprice + ",'"+date+"');";
             System.out.println("insert into transactionmain table done");
             int no = stmt.executeUpdate(sql);
             sql="update inventory set value=value-"+funits+" where itemid="+fid+";";
@@ -92,7 +93,7 @@ try
             String sql = "insert into invoice values("
                     + id +",'"
                     + name + "',"
-                    + total + ",'2018-02-28');";
+                    + total + ",'"+date+"');";
             System.out.println("insert into invoice table done");
             stmt.executeUpdate(sql);
             // for inserting deleting and update
@@ -146,8 +147,15 @@ try
         jLabel4 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jTextField9 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel7.setText("Phone Number");
 
@@ -218,7 +226,6 @@ try
 
         jLabel2.setText("No.of Units");
 
-        jTextField6.setEditable(false);
         jTextField6.setFocusable(false);
 
         jLabel3.setText("Price Of each Unit");
@@ -234,6 +241,11 @@ try
 
         jLabel5.setText("Total price");
 
+        jLabel9.setText("DATE");
+
+        jTextField9.setEditable(false);
+        jTextField9.setFocusable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -243,9 +255,6 @@ try
                     .addGroup(layout.createSequentialGroup()
                         .addGap(57, 57, 57)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(75, 75, 75)
-                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -266,22 +275,30 @@ try
                                         .addGap(14, 14, 14))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel6)
+                                                .addComponent(jLabel2)
+                                                .addComponent(jLabel7))
+                                            .addGap(13, 13, 13))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(jLabel8)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel6)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel7))
-                                        .addGap(13, 13, 13))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                                        .addComponent(jLabel9)
+                                        .addGap(88, 88, 88)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jTextField8)
                                     .addComponent(jTextField7)
                                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
                                     .addComponent(jTextField2)
-                                    .addComponent(jTextField3))))))
+                                    .addComponent(jTextField3)
+                                    .addComponent(jTextField9)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(79, 79, 79)
+                        .addComponent(jButton1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -289,7 +306,11 @@ try
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(56, 56, 56)
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
@@ -320,9 +341,9 @@ try
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(28, 28, 28)
                         .addComponent(jButton1)
-                        .addGap(47, 47, 47)
+                        .addGap(32, 32, 32)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -436,31 +457,59 @@ try
     }//GEN-LAST:event_jButton1KeyPressed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int grandtotal=0;
+        int grandtotal;
         String name=jTextField8.getText();
         long id=Long.parseLong(jTextField7.getText());
         System.out.println("printing bill");
-        System.out.println("taking data from table and inserting into array");
         int i,j=0;
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         int nRow = model.getRowCount(), nCol = model.getColumnCount();
         Object[][] tableData = new Object[nRow][nCol];
+        grandtotal=0;
+        XWPFDocument doc=new XWPFDocument();
+    XWPFParagraph paragraph =doc.createParagraph();//creates a paragraph
+     XWPFRun run=paragraph.createRun();
+       try{
+        FileOutputStream f2;
+        f2 = new FileOutputStream("file.docx");
+        run.setText("name:-"+name);
+         run.addBreak();
+         run.setText("phone number:-"+id);
+         run.addBreak();
+         run.setText("date:-"+date );
+         run.addBreak();
         for (i = 0 ; i < nRow ; i++){
-            if((int)tableData[i][j+2]==0){
-                continue;}
+            if((int)model.getValueAt(i,j+2)==0){
+               continue;}
             for (j = 0 ; j < nCol ; j++){
                 tableData[i][j] = model.getValueAt(i,j);
             }
             j=0;
-            insertinto(id,tableData[i][j],tableData[i][j+1],tableData[i][j+2],tableData[i][j+3]);
             grandtotal=grandtotal+(int)tableData[i][j+3];
+            run.setText("\t"+tableData[i][j+1]+"\t"+tableData[i][j+2]+"\t"+tableData[i][j+3] );
+         run.addBreak();
+            insertinto(id,tableData[i][j],tableData[i][j+1],tableData[i][j+2],tableData[i][j+3]);
+            
             //go to top and check
         }
-        jTextField6.setText(""+grandtotal);
+        run.setText("Total Amount to be paid :-"+grandtotal);
+        run.addBreak();
+        doc.write(f2);
+         f2.close();
+       }catch(IOException e){}
+        System.out.println("taking data from table and inserting into array");
+      jTextField6.setText(""+grandtotal);
         intovoice(id,name,grandtotal);
 
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+        date=localDate.format(formatter); 
+jTextField9.setText(date);        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -508,6 +557,7 @@ try
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
@@ -518,5 +568,6 @@ try
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
+    private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 }
