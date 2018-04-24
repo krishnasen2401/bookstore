@@ -478,6 +478,8 @@ try
          run.addBreak();
          run.setText("date:-"+date );
          run.addBreak();
+         //run.setText("name\tunits\tPerUnit \tPrice");
+         //run.addBreak();
         for (i = 0 ; i < nRow ; i++){
             if((int)model.getValueAt(i,j+2)==0){
                continue;}
@@ -486,7 +488,15 @@ try
             }
             j=0;
             grandtotal=grandtotal+(int)tableData[i][j+3];
-            run.setText("\t"+tableData[i][j+1]+"\t"+tableData[i][j+2]+"\t"+tableData[i][j+3] );
+            String temp1=tableData[i][j+1].toString();
+            temp1=String.format("%1$"+30+ "s", temp1);
+            String temp2= tableData[i][j+2].toString();
+            temp2=String.format("%1$"+5+ "s", temp2);
+            String temp3= tableData[i][j+3].toString();
+            temp3=String.format("%1$"+6+ "s", temp3);
+            int perunit=(int)tableData[i][j+3]/(int)tableData[i][j+2];
+            String temp4=String.format("%1$"+8+ "s",perunit);
+            run.setText("\t"+temp1+"\t"+temp2+"\t"+temp4+"\t"+temp3);
          run.addBreak();
             insertinto(id,tableData[i][j],tableData[i][j+1],tableData[i][j+2],tableData[i][j+3]);
             

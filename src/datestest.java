@@ -19,5 +19,6 @@ public class datestest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd");
         String date=localDate.format(formatter);
         System.out.println(date);
+        String.format("%1$"+21+ "s", date);
     }
 }
